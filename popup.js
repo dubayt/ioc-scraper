@@ -1,24 +1,15 @@
-function displayIOCs(iocs) {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
+const browserAPI = typeof chrome !== 'undefined' ? chrome : browser; //polyfill
 
-    for (const [type, values] of Object.entries(iocs)) {
-        if (values.length > 0) {
-            const header = document.createElement('h3');
-            header.textContent = type;
-            resultsDiv.appendChild(header);
+let extractIOCs = {}; //store IOCs for when exported
 
-            const list = document.createElement('ul');
-            values.forEach(element => {
-                const item = document.createElement('li');
-                item.textContent = element;
-                list.appendChild(item);
-            });
 
-            resultsDiv.appendChild(list);
-        }
-    }
-}
+document.getElementById('extract').addEventListener('click', () => {
+    const selectedTypes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.id);
+    browserAPI.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        extractedIOCs = response;
+        console.log('extracted IOCs: ', extractedIOCs);
+    })
+})
 
 browser.tabs.query({active: true, currentWindow: true}, (tabs) => {
     browser.tabs.sendMessage(tabs[0].id, {action: "extractIOCs"})
