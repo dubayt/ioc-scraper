@@ -2,17 +2,18 @@
     "manifest_version": 2,
     "name": "IOC Scraper",
     "version": "1.0",
-    "description": "Tool to help grab useful IOCs from threat intelligence articles",
+    "description": "Extract IOCs from web pages",
     "permissions": ["activeTab", "storage"],
     "browser_action": {
-      "default_icon": "icon.png",
-      "default_popup": "popup.html"
+        "default_popup": "popup.html"
     },
     "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
-      }
-    ]
-  }
-  
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    }
+}
