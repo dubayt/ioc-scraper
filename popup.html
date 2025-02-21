@@ -9,8 +9,16 @@
   </style>
 </head>
 <body>
-  <h2>Extracted IOCs</h2>
-  <div id="results"></div>
+  <h3>Extracted IOCs</h3>
+  <div>
+    <label><input type="checkbox" id="ip" checked> IP Addresses</label>
+    <label><input type="checkbox" id="domain" checked> Domains</label>
+    <label><input type="checkbox" id="hash" checked> Hashes</label>
+    <label><input type="checkbox" id="email" checked> Emails</label>
+    <label><input type="checkbox" id="filePath" checked> File Paths</label>
+    <label><input type="checkbox" id="registryKey" checked> Registry Keys</label>
+    <label><input type="checkbox" id="cve" checked> CVEs</label>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
