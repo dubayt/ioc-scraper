@@ -9,9 +9,9 @@ function displayIOCs(iocs) {
             resultsDiv.appendChild(header);
 
             const list = document.createElement('ul');
-            values.array.forEach(element => {
+            values.forEach(element => {
                 const item = document.createElement('li');
-                item.textContent = values;
+                item.textContent = element;
                 list.appendChild(item);
             });
 
@@ -23,5 +23,5 @@ function displayIOCs(iocs) {
 browser.tabs.query({active: true, currentWindow: true}, (tabs) => {
     browser.tabs.sendMessage(tabs[0].id, {action: "extractIOCs"})
     .then(displayIOCs)
-    .catch(error => console.error('error: ${error}'));
+    .catch(error => console.error(`Error: ${error}`));
 })

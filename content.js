@@ -1,5 +1,6 @@
 function extractIOCs(){
     const text = document.body.innerText;
+    console.log("Page content:", text);
     const iocs = {
         ipv4: [],
         domains: [],
