@@ -6,6 +6,7 @@
     body { font-family: Helvetica, sans-serif; padding: 10px; width: 300px; }
     button { margin: 5px; padding: 5px 10px; }
     label { display: block; margin: 2px 0; }
+    textarea { width: 100%; height: 150px; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -22,6 +23,7 @@
   <button id="extract">Extract IOCs</button>
   <button id="exportCSV">Export as CSV</button>
   <button id="exportJSON">Export as JSON</button>
+  <textarea id="iocDisplay" readonly></textarea>
   <script src="popup.js"></script>
 </body>
 </html>
