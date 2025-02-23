@@ -66,7 +66,6 @@ function highlightIOCs(iocs) {
 // Message handling
 browserAPI.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'extract') {
-        const text = document.body.textContent;
         const patterns = loadPatterns();
         const selectedPatterns = {};
         
@@ -76,7 +75,7 @@ browserAPI.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
         });
         
-        const iocs = extractIOCs(text, selectedPatterns);
+        const iocs = extractIOCs(selectedPatterns); // Pass only selectedPatterns
         highlightIOCs(iocs);
         sendResponse(iocs);
         return true; // Required for async response

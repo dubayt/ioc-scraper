@@ -3,9 +3,11 @@ let extractedIOCs = {};
 
 document.getElementById('extract').addEventListener('click', () => {
     const selectedTypes = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.id);
+    console.log('Selected types:', selectedTypes);
                               
     browserAPI.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         browserAPI.tabs.sendMessage(tabs[0].id, { action: 'extract', types: selectedTypes }, (response) => {
+            console.log('Response from content script:', response);
             extractedIOCs = response || {};
             displayIOCs(extractedIOCs);
         });
