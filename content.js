@@ -7,7 +7,8 @@ const defaultPatterns = {
     hash: /\b[a-fA-F0-9]{32,64}\b/g,
     email: /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g,
     registryKey: /\b(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER|HKEY_USERS|HKEY_CLASSES_ROOT|HKEY_CURRENT_CONFIG)\\[a-zA-Z0-9\\._-]+\b/g,
-    cve: /\bCVE-\d{4}-\d{4,7}\b/g
+    cve: /\bCVE-\d{4}-\d{4,7}\b/g,
+    executable: /\b[a-zA-Z0-9_-]+\.(exe|dll|bin|bat|cmd|com|cpl|drv|efi|exe|fon|inf|ini|iso|jar|lnk|msc|msi|msp|ocx|scr|sys|vb|vbs|vxd|wsh)\b/g // Common executable file types
 };
 
 // Whitelist of non-malicious domains
@@ -33,8 +34,8 @@ function extractIOCs(selectedPatterns) {
         if (matches) {
             iocs[type] = [...new Set(matches)].filter(match => {
                 if (type === 'domain') {
-                    // Exclude whitelisted domains and .exe files
-                    return !domainWhitelist.includes(match.toLowerCase()) && !match.endsWith('.exe');
+                    // Exclude whitelisted domains
+                    return !domainWhitelist.includes(match.toLowerCase());
                 }
                 return true;
             }); // Deduplicate and filter
