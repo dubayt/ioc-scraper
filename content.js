@@ -1,18 +1,26 @@
 // Polyfill
 const browserAPI = typeof chrome !== 'undefined' ? chrome : browser;
 
+const fileExtensions = ['exe', 'dll', 'bat', 'ps1', 'vbs', 'js', 'py', 'rb', 'sh', 'aspx'];
+
 const defaultPatterns = {
     ip: /\b\d{1,3}(?:\[\.\]|\.)\d{1,3}(?:\[\.\]|\.)\d{1,3}(?:\[\.\]|\.)\d{1,3}\b/g,
-    domain: /\b(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}\b(?!\.exe)/g, // Refined domain regex to capture full domains and exclude .exe files
+    domain: /\b(?!(?:\d{1,3}\.){3}\d{1,3}\b)(?:[a-zA-Z0-9-]+(?:\[\.\]|\.))+[a-zA-Z]{2,}\b(?!\.(?:exe|dll|bat|ps1|vbs|js|py|rb|sh))\b/g,
     hash: /\b[a-fA-F0-9]{32,64}\b/g,
     email: /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g,
+    filePath: /(?:\/[^\s/]+)+\/?|\b[A-Z]:\\[^\\]+\\/gi,
     registryKey: /\b(HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER|HKEY_USERS|HKEY_CLASSES_ROOT|HKEY_CURRENT_CONFIG)\\[a-zA-Z0-9\\._-]+\b/g,
     cve: /\bCVE-\d{4}-\d{4,7}\b/g,
-    executable: /\b[a-zA-Z0-9_-]+\.(exe|dll|bin|bat|cmd|com|cpl|drv|efi|exe|fon|inf|ini|iso|jar|lnk|msc|msi|msp|ocx|scr|sys|vb|vbs|vxd|wsh)\b/g // Common executable file types
+    executable: new RegExp(`\\b[a-zA-Z0-9-_\\.]+\\.(${fileExtensions.join('|')})\\b`, 'gi')
 };
 
-// Whitelist of non-malicious domains
-const domainWhitelist = ['x.com', 'cisa.gov'];
+
+// Expanded whitelist of non-malicious domains
+const domainWhitelist = [
+    'x.com', 'linkedin.com', 'cisa.gov', 'justice.gov', 'nist.gov',
+    'microsoft.com', 'google.com', 'blackberry.com', 'cert.gov.ua',
+    'atera.com', 'csolve.net', 'tech-keys.com'
+];
 
 // Load regex patterns
 function loadPatterns() {
@@ -25,7 +33,14 @@ function refang(ioc) {
     return ioc.replace(/\[\.\]/g, '.');
 }
 
-// IOC extraction
+// Add this helper function before extractIOCs
+function isDomainWhitelisted(domain) {
+    return domainWhitelist.some(whiteDomain => {
+        return domain === whiteDomain || domain.endsWith('.' + whiteDomain);
+    });
+}
+
+// Modified extractIOCs function to better handle domain filtering
 function extractIOCs(selectedPatterns) {
     const text = document.body.innerText;
     const iocs = {};
@@ -34,41 +49,20 @@ function extractIOCs(selectedPatterns) {
         if (matches) {
             iocs[type] = [...new Set(matches)].filter(match => {
                 if (type === 'domain') {
-                    // Exclude whitelisted domains
-                    return !domainWhitelist.includes(match.toLowerCase());
+                    const refanged = refang(match).toLowerCase();
+                    // Check whitelist
+                    if (isDomainWhitelisted(refanged)) {
+                        return false;
+                    }
+                    // Check if domain ends with file extension
+                    const hasFileExt = fileExtensions.some(ext => refanged.endsWith('.' + ext));
+                    return !hasFileExt;
                 }
                 return true;
-            }); // Deduplicate and filter
+            });
         }
     }
     return iocs;
-}
-
-// Safe highlighting
-function highlightIOCs(iocs) {
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    while (walker.nextNode()) {
-        const node = walker.currentNode;
-        let content = node.textContent;
-        let modified = false;
-        
-        for (const type in iocs) {
-            iocs[type].forEach(originalIoc => {
-                const escaped = originalIoc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const regex = new RegExp(escaped, 'g');
-                if (content.match(regex)) {
-                    content = content.replace(regex, `<mark>${originalIoc}</mark>`);
-                    modified = true;
-                }
-            });
-        }
-        
-        if (modified) {
-            const temp = document.createElement('div');
-            temp.innerHTML = content;
-            node.parentNode.replaceChild(temp, node);
-        }
-    }
 }
 
 // Message handling
@@ -87,7 +81,6 @@ browserAPI.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log('Selected patterns:', selectedPatterns);
         const iocs = extractIOCs(selectedPatterns);
         console.log('Extracted IOCs:', iocs);
-        highlightIOCs(iocs);
         sendResponse(iocs);
         return true; // Required for async response
     }
