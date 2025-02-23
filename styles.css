@@ -12,8 +12,11 @@ body {
   background-color: var(--primary-dark);
   color: var(--primary-light);
   padding: 20px;
-  width: 350px;
+  width: auto;
+  min-width: 300px;
   margin: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 body.popup {
