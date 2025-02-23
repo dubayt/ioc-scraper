@@ -5,7 +5,8 @@
     "description": "Extract IOCs from web pages",
     "permissions": ["activeTab", "storage"],
     "browser_action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "browser_style": false
     },
     "content_scripts": [
         {
