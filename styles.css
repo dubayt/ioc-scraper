@@ -1,100 +1,162 @@
 :root {
-  --primary-dark: #1a1a1a;
-  --primary-light: #ffffff;
-  --accent-green: #90EE90;
-  --accent-blue: #ADD8E6;
-  --border-radius: 8px;
-  --spacing: 16px;
-}
-
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: var(--primary-dark);
-  color: var(--primary-light);
-  padding: 20px;
-  width: auto;
-  min-width: 300px;
-  margin: 0;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-body.popup {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: var(--primary-dark) !important;
-  color: var(--primary-light) !important;
-  padding: 20px;
-  width: 350px;
-  margin: 0;
-}
-
-h3 {
-  color: var(--accent-green);
-  border-bottom: 2px solid var(--accent-green);
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-}
-
-.checkbox-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.checkbox-item {
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 8px;
-  border-radius: var(--border-radius);
-  transition: background-color 0.2s;
-}
-
-.checkbox-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.checkbox-item input[type="checkbox"] {
-  accent-color: var(--accent-green);
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-button {
-  background-color: var(--accent-blue);
-  color: var(--primary-dark);
-  border: none;
-  padding: 10px 15px;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
-  flex: 1;
-  font-weight: 600;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-#extract {
-  background-color: var(--accent-green);
-}
-
-textarea {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--primary-light);
-  border: 1px solid var(--accent-blue);
-  border-radius: var(--border-radius);
-  padding: 10px;
-  font-family: 'Consolas', monospace;
-  resize: vertical;
-}
-
-textarea:focus {
-  outline: none;
-  border-color: var(--accent-green);
-}
+    --primary-dark: #1a1a1a;
+    --primary-light: #ffffff;
+    --accent-green: #90EE90;
+    --accent-blue: #ADD8E6;
+    --border-radius: 8px;
+    --spacing: 16px;
+    --ioc-ip: var(--accent-blue);
+    --ioc-domain: var(--accent-green);
+    --ioc-hash: #FFB6C1;
+    --ioc-email: #FFA500;
+    --ioc-filepath: #DDA0DD;
+    --ioc-registrykey: #20B2AA;
+    --ioc-cve: #FF6B6B;
+    --ioc-executable: #FFD700;
+  }
+  
+  body.popup {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--primary-dark);
+    color: var(--primary-light);
+    padding: 20px;
+    width: 350px;
+    min-width: 300px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  h3 {
+    color: var(--accent-green);
+    border-bottom: 2px solid var(--accent-green);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .checkbox-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .checkbox-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s;
+  }
+  
+  .checkbox-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .checkbox-item input[type="checkbox"] {
+    accent-color: var(--accent-green);
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    background-color: var(--accent-blue);
+    color: var(--primary-dark);
+    border: none;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+    flex: 1;
+    font-weight: 600;
+  }
+  
+  button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+  
+  #extract {
+    background-color: var(--accent-green);
+  }
+  
+  .ioc-type-container {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  .ioc-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+  }
+  
+  .ioc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(144, 238, 144, 0.1);
+    padding: 4px 12px;
+    border-radius: 16px;
+    margin: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+  }
+  
+  .ioc-chip:hover {
+    background: rgba(255, 0, 0, 0.1);
+  }
+  
+  .ioc-chip.removed {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+  
+  .ioc-chip[data-type="ip"] { border-left: 3px solid var(--ioc-ip); }
+  .ioc-chip[data-type="domain"] { border-left: 3px solid var(--ioc-domain); }
+  .ioc-chip[data-type="hash"] { border-left: 3px solid var(--ioc-hash); }
+  .ioc-chip[data-type="email"] { border-left: 3px solid var(--ioc-email); }
+  .ioc-chip[data-type="filePath"] { border-left: 3px solid var(--ioc-filepath); }
+  .ioc-chip[data-type="registryKey"] { border-left: 3px solid var(--ioc-registrykey); }
+  .ioc-chip[data-type="cve"] { border-left: 3px solid var(--ioc-cve); }
+  .ioc-chip[data-type="executable"] { border-left: 3px solid var(--ioc-executable); }
+  
+  .ioc-chip .remove {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+  
+  h4 {
+    margin: 24px 0 8px 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+  }
+  
+  h4:first-of-type {
+    margin-top: 8px;
+  }
+  
+  .ioc-value {
+    flex: 1;
+    word-break: break-all; /* Added to handle long IOCs */
+  }
+  
+  .remove {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  
+  .remove:hover {
+    opacity: 1;
+  }

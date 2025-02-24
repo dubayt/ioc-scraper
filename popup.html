@@ -4,32 +4,33 @@
   <title>IOC Scraper</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+<meta charset="UTF-8">
 <body class="popup">
   <h3>IOC Scraper</h3>
   <div class="checkbox-container">
     <div class="checkbox-item">
-      <label><input type="checkbox" id="ip" checked> IP Addresses</label>
+      <label><input type="checkbox" id="ip"> IP Addresses</label>
     </div>
     <div class="checkbox-item">
-      <label><input type="checkbox" id="domain" checked> Domains</label>
+      <label><input type="checkbox" id="domain"> Domains</label>
     </div>
     <div class="checkbox-item">
-      <label><input type="checkbox" id="hash" checked> Hashes</label>
+      <label><input type="checkbox" id="hash"> Hashes</label>
     </div>
     <div class="checkbox-item">
-      <label><input type="checkbox" id="email" checked> Emails</label>
+      <label><input type="checkbox" id="email"> Emails</label>
     </div>
     <div class="checkbox-item">
-      <label><input type="checkbox" id="filePath" checked> File Paths</label>
+      <label><input type="checkbox" id="filePath"> File Paths</label>
     </div>
     <div class="checkbox-item">
-      <label><input type="checkbox" id="registryKey" checked> Registry Keys</label>
+      <label><input type="checkbox" id="registryKey"> Registry Keys</label>
     </div>
     <div class="checkbox-item">
-      <label><input type="checkbox" id="cve" checked> CVEs</label>
+      <label><input type="checkbox" id="cve"> CVEs</label>
     </div>
     <div class="checkbox-item">
-      <label><input type="checkbox" id="executable" checked> Executables</label>
+      <label><input type="checkbox" id="executable"> Executables</label>
     </div>
   </div>
   <div class="button-group">
@@ -39,7 +40,7 @@
     <button id="exportCSV">Export CSV</button>
     <button id="exportJSON">Export JSON</button>
   </div>
-  <textarea id="iocDisplay" rows="10" readonly></textarea>
+  <div id="iocDisplay" class="ioc-container"></div>
   <script src="popup.js"></script>
 </body>
 </html>
