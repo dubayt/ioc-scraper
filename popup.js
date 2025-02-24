@@ -82,7 +82,6 @@ function displayIOCs(iocs, defanged = false) {
           const chip = document.createElement('div');
           chip.className = 'ioc-chip';
           chip.setAttribute('data-value', value);
-          // Add this line to set the data-type attribute
           chip.setAttribute('data-type', type);
           
           const valueSpan = document.createElement('span');

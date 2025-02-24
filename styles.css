@@ -156,7 +156,7 @@
   
   .ioc-value {
     flex: 1;
-    word-break: break-all; /* Added to handle long IOCs */
+    word-break: break-all; /* Break long strings */
   }
   
   .remove {
@@ -168,7 +168,6 @@
     opacity: 1;
   }
 
-  /* Add a sticky header */
   .header-container {
     position: sticky;
     top: 0;
@@ -177,10 +176,9 @@
     z-index: 100;
   }
   
-  /* Add some spacing for content */
   .content-container {
     padding-top: 10px;
-    min-height: calc(100vh - 150px); /* Account for header and padding */
+    min-height: calc(100vh - 150px);
     display: flex;
     flex-direction: column;
   }
