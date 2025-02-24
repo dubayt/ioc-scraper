@@ -4,10 +4,9 @@
     "version": "1.0",
     "description": "Extract IOCs from web pages",
     "permissions": ["activeTab", "storage"],
-    "sidebar_action": {
-        "default_panel": "popup.html",
-        "default_title": "IOC Scraper",
-        "browser_style": false
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_title": "IOC Scraper"
     },
     "content_scripts": [
         {
