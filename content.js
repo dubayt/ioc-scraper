@@ -3,8 +3,7 @@ const browserAPI = typeof chrome !== 'undefined' ? chrome : browser;
 const fileExtensions = ['exe', 'dll', 'bat', 'ps1', 'vbs', 'js', 'py', 'rb', 'sh', 'aspx'];
 
 const defaultPatterns = {
-  ip: /\b\d{1,3}(?:\[\.\]|\.)\d{1,3}(?:\[\.\]|\.)\d{1,3}(?:\[\.\]|\.)\d{1,3}\b/g,
-  domain: /\b(?!(?:\d{1,3}\.){3}\d{1,3}\b)(?:[a-zA-Z0-9-]+(?:\[\.\]|\.))+[a-zA-Z]{2,}\b(?!\.(?:exe|dll|bat|ps1|vbs|js|py|rb|sh))\b/g,
+  ip: /\b\d{1,3}(?:\[\.\]|\.)\d{1,3}(?:\[\.\]|\.)\d{1,3}(?:\[\.\]|\.)\d{1,3}\b|(?:(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|:(?::[0-9a-fA-F]{1,4}){1,7}|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?::[0-9a-fA-F]{1,4}){1,6}|:(?::[0-9a-fA-F]{1,4}){1,7}|::)/g,  domain: /\b(?!(?:\d{1,3}\.){3}\d{1,3}\b)(?:[a-zA-Z0-9-]+(?:\[\.\]|\.))+[a-zA-Z]{2,}\b(?!\.(?:exe|dll|bat|ps1|vbs|js|py|rb|sh))\b/g,
   hash: /\b[a-fA-F0-9]{32,64}\b/g,
   email: /\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b/g,
   filePath: /(?:\/[^\s/]+)+\/?|\b[A-Z]:\\[^\\]+\\/gi,
@@ -35,26 +34,25 @@ function isDomainWhitelisted(domain) {
 }
 
 function extractIOCs(selectedPatterns) {
-  const text = document.body.innerText;
-  const iocs = {};
-  for (const [type, pattern] of Object.entries(selectedPatterns)) {
-    const matches = text.match(pattern);
-    if (matches) {
-      iocs[type] = [...new Set(matches)].filter(match => {
+    const text = document.body.innerText;
+    const iocs = {};
+    for (const [type, pattern] of Object.entries(selectedPatterns)) {
+      const matches = text.match(pattern);
+      if (matches) {
+        const refangedMatches = matches.map(refang);
+        const uniqueRefanged = [...new Set(refangedMatches)];
         if (type === 'domain') {
-          const refanged = refang(match).toLowerCase();
-          if (isDomainWhitelisted(refanged)) {
-            return false;
-          }
-          const hasFileExt = fileExtensions.some(ext => refanged.endsWith('.' + ext));
-          return !hasFileExt;
+          iocs[type] = uniqueRefanged.filter(match => {
+            const lowerMatch = match.toLowerCase();
+            return !isDomainWhitelisted(lowerMatch) && !fileExtensions.some(ext => lowerMatch.endsWith('.' + ext));
+          });
+        } else {
+          iocs[type] = uniqueRefanged;
         }
-        return true;
-      });
+      }
     }
+    return iocs;
   }
-  return iocs;
-}
 
 browserAPI.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'extract') {
