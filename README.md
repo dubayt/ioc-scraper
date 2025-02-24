@@ -2,6 +2,8 @@
 
 A browser extension to extract Indicators of Compromise (IOCs) from threat intelligence articles.
 
+![image](https://github.com/user-attachments/assets/70c46413-1eab-4d04-bb82-f1127af073f9)
+
 ## Features
 
 - Extract multiple types of IOCs from web pages
